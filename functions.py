@@ -1,18 +1,34 @@
-import numpy as np
-import pandas as pd
+#
+# functions for calculating trends on individual time series
+#
+# v.1.0
+#
+# by P.Wolski
+# September 2016
+#
+# functions:
+# autocorr_test()
+# trend_CI()
+# get_TheilSen()
+#
+# usage described in docstrings in each of the functions
+#
+#
+
 
 def autocorr_test(_xdata, _ydata):
+    import numpy as np
+    import pandas as pd
     from statsmodels.stats.diagnostic import acorr_ljungbox
     from statsmodels.tsa.stattools import acf
-    
-#all statst need regularly spaced, continuous time series - just y variable
-#Durbin-Watson statistics:
-# calculated correctly with missing data
-# but no significance level. Apparently critical values for DW are not implemented in any python library
-#ACF:
-# crashes on missing data
-# Ljung-Box:
-# crashes on missing data too
+    #all statst need regularly spaced, continuous time series - just y variable
+    #Durbin-Watson statistics:
+    # calculated correctly with missing data
+    # but no significance level. Apparently critical values for DW are not implemented in any python library
+    #ACF:
+    # crashes on missing data
+    # Ljung-Box:
+    # crashes on missing data too
     _ydata=np.ma.masked_invalid(_ydata)
     #autocorrelation in residuals
     #this is acf function that does not allow nans
@@ -28,6 +44,9 @@ def autocorr_test(_xdata, _ydata):
     _stat, _pvalue=acorr_ljungbox(_ydata, lags=1, boxpierce=False)    
     print "Ljung-Box p-value on lag 1 autocorrelation:", _pvalue
     print ""
+
+
+
 
 def trend_CI(x_var, y_var, n_boot=1000, ci=95, trendtype="linreg", q=0.5, frac=0.6, it=3, autocorr=None, CItype="bootstrap"):
     """calculates bootstrap confidence interval and significance level for trend, ignoring autocorrelation or accounting for it
@@ -72,6 +91,8 @@ def trend_CI(x_var, y_var, n_boot=1000, ci=95, trendtype="linreg", q=0.5, frac=0
     -------
     the fit function ocassionally crashes on resampled data. The workaround is to use try statement
     """
+    import numpy as np
+    import pandas as pd
     #for linreg
     import statsmodels.api as sm
     from statsmodels.regression.linear_model import OLS
@@ -262,7 +283,12 @@ def trend_CI(x_var, y_var, n_boot=1000, ci=95, trendtype="linreg", q=0.5, frac=0
     output={"slope":slope, "CI_high":CI_high, "CI_low":CI_high, "pvalue":pvalue, "trend": y_pred, "trendCI_low":trendCI_low, "trendCI_high":trendCI_high}
     return output
 
+
+
+
 def get_TheilSen(_x, what, _nboot, _y):
+    import numpy as np
+    import pandas as pd
     #the x y are weird, it appears that apply passes the dataframe column as last element
     from arch.bootstrap import StationaryBootstrap, IIDBootstrap
     from scipy.stats import mstats, mannwhitneyu, t, kendalltau
