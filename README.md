@@ -16,16 +16,26 @@ September 2016
 
 ## files:
 functions.py
-
 contains functions:
 test_autocorr()
 trend_CI()
 get_TheilSen()
-
  
+trend.py
+contains functions:
+get_linear()
+get_TheilSen()
+get_quantreg()
+
 ## known bugs and issues:
+in functions.py
 -lowess in trend_CI() crashes if time series starts with NAs
 -there is no implementation of significance level for Durbin-Watson test for autocorrelation
 -test_autocorr() and get_TheilSen() missing structured docstrings
 -example datasets and wrapper functions would be nice to have
+
+in trend.py
+- all functions give only analytical pval
+- no correction for autocorrelation
+
  
